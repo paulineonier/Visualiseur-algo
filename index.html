@@ -3,36 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualiseur d'Algorithmes de Tri</title>
+  <title>Algorithmes & Machine Learning — Cours Interactif</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Visualiseur de Tri</h1>
-    
-    <div class="controls">
-      <button id="btn-generate">Nouveau Tableau</button>
+    <header>
+      <h1>Algorithmes de Tri & Machine Learning</h1>
+      <p class="subtitle">Comprendre le fonctionnement des algorithmes de base et leur rôle clé en IA.</p>
       
-      <label for="select-algo">Algorithme :</label>
-      <select id="select-algo">
-        <option value="bubble">Tri à bulles (Bubble Sort)</option>
-        <option value="selection">Tri par sélection (Selection Sort)</option>
-      </select>
+      <nav class="tabs-nav">
+        <button id="tab-btn-visualizer" class="tab-btn active">1. Visualiseur & Simulation</button>
+        <button id="tab-btn-course" class="tab-btn">2. Cours & Concepts ML</button>
+      </nav>
+    </header>
 
-      <label for="speed">Vitesse :</label>
-      <input type="range" id="speed" min="10" max="500" value="250" />
+    <!-- SECTION 1 : VISUALISEUR -->
+    <main id="tab-visualizer" class="tab-content active">
+      <div class="controls">
+        <button id="btn-generate">Nouveau Tableau</button>
+        
+        <label for="select-algo">Algorithme :</label>
+        <select id="select-algo">
+          <option value="bubble">Tri à bulles (Bubble Sort)</option>
+          <option value="selection">Tri par sélection (Selection Sort)</option>
+        </select>
 
-      <button id="btn-start" class="primary">Lancer le tri</button>
-      <button id="btn-stop" class="danger" disabled>Stopper</button>
-    </div>
+        <label for="speed">Vitesse :</label>
+        <input type="range" id="speed" min="10" max="500" value="250" />
 
-    <!-- Zone d'explications dynamiques -->
-    <div class="info-box">
-      <div id="algo-description" class="description"></div>
-      <div id="live-explanation" class="live-status">Cliquez sur « Lancer le tri » pour démarrer.</div>
-    </div>
+        <button id="btn-start" class="primary">Lancer le tri</button>
+        <button id="btn-stop" class="danger" disabled>Stopper</button>
+      </div>
 
-    <div id="array-container"></div>
+      <div class="info-box">
+        <div id="algo-description" class="description"></div>
+        <div id="live-explanation" class="live-status">Cliquez sur « Lancer le tri » pour démarrer la visualisation.</div>
+      </div>
+
+      <div id="array-container"></div>
+    </main>
+
+    <!-- SECTION 2 : COURS ET MACHINE LEARNING -->
+    <main id="tab-course" class="tab-content">
+      <section class="course-card">
+        <h2>Module 1 : Pourquoi le tri est indispensable en Machine Learning ?</h2>
+        <p>
+          En apparence, trier des nombres semble être une tâche informatique élémentaire. Pourtant, la majorité des modèles d'intelligence artificielle modernes reposent sur des opérations de classement et de tri intensives.
+        </p>
+        <ul class="course-list">
+          <li><strong>Recommandation (Top-N) :</strong> Lorsqu'un modèle calcule la pertinence de 10 000 films pour un utilisateur, il doit trier ces scores pour afficher les 5 meilleurs.</li>
+          <li><strong>Classification (k-NN) :</strong> Pour classer un nouveau point, l'algorithme calcule la distance avec tous les points connus, puis trie ces distances pour isoler les <em>k</em> voisins les plus proches.</li>
+          <li><strong>Sélection de variables (Feature Selection) :</strong> On évalue l'importance de chaque variable puis on trie les variables pour ne garder que les plus informatives.</li>
+        </ul>
+      </section>
+
+      <section class="course-card highlight">
+        <h2>Module 2 : Démonstration interactive — L'algorithme k-NN</h2>
+        <p>
+          L'algorithme des <strong>k plus proches voisins (k-Nearest Neighbors)</strong> utilise directement le tri. Modifiez la valeur de <em>k</em> ci-dessous pour voir comment le tri des distances détermine la décision du modèle.
+        </p>
+
+        <div class="knn-demo">
+          <div class="knn-controls">
+            <label for="knn-k">Valeur de k (nombre de voisins) : </label>
+            <input type="range" id="knn-k" min="1" max="7" value="3" />
+            <span id="knn-k-val">3</span>
+          </div>
+
+          <div class="knn-visual">
+            <p><strong>Distances calculées entre le point à prédire et les données connues :</strong></p>
+            <div id="knn-list" class="knn-list"></div>
+            <div id="knn-result" class="knn-result"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="course-card">
+        <h2>Module 3 : Comparatif des Algorithmes & Complexité</h2>
+        <table class="course-table">
+          <thead>
+            <tr>
+              <th>Algorithme</th>
+              <th>Complexité</th>
+              <th>Mécanisme</th>
+              <th>Parallèle en Machine Learning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Tri à bulles</strong></td>
+              <td>$\mathcal{O}(n^2)$</td>
+              <td>Comparaison locale de voisins de proche en proche.</td>
+              <td>Optimisation locale répétitive (similaire aux ajustements pas à pas d'une descente de gradient).</td>
+            </tr>
+            <tr>
+              <td><strong>Tri par sélection</strong></td>
+              <td>$\mathcal{O}(n^2)$</td>
+              <td>Recherche globale du minimum puis placement.</td>
+              <td><em>Greedy Feature Selection</em> : extraction itérative de la meilleure variable globale.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="course-card">
+        <h2>Module 4 : Testez vos connaissances</h2>
+        <div id="quiz-container">
+          <p id="quiz-question" class="quiz-q">Question : Quel rôle joue le tri dans l'algorithme des k plus proches voisins (k-NN) ?</p>
+          <div id="quiz-options" class="quiz-options">
+            <button class="quiz-opt" data-correct="false">Il sert à calculer la moyenne des données.</button>
+            <button class="quiz-opt" data-correct="true">Il ordonne les distances calculées pour identifier les voisins les plus proches.</button>
+            <button class="quiz-opt" data-correct="false">Il réduit la dimension de la matrice d'entrée.</button>
+          </div>
+          <p id="quiz-feedback" class="quiz-feedback"></p>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script src="main.js"></script>

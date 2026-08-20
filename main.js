@@ -1,3 +1,24 @@
+// Navigation par onglets
+const tabBtnVisualizer = document.getElementById('tab-btn-visualizer');
+const tabBtnCourse = document.getElementById('tab-btn-course');
+const tabVisualizer = document.getElementById('tab-visualizer');
+const tabCourse = document.getElementById('tab-course');
+
+tabBtnVisualizer.addEventListener('click', () => {
+  tabBtnVisualizer.classList.add('active');
+  tabBtnCourse.classList.remove('active');
+  tabVisualizer.classList.add('active');
+  tabCourse.classList.remove('active');
+});
+
+tabBtnCourse.addEventListener('click', () => {
+  tabBtnCourse.classList.add('active');
+  tabBtnVisualizer.classList.remove('active');
+  tabCourse.classList.add('active');
+  tabVisualizer.classList.remove('active');
+});
+
+// PARTIE 1 : VISUALISEUR DE TRI
 const arrayContainer = document.getElementById('array-container');
 const btnGenerate = document.getElementById('btn-generate');
 const btnStart = document.getElementById('btn-start');
@@ -12,28 +33,24 @@ const ARRAY_SIZE = 30;
 let isSorting = false;
 let stopRequested = false;
 
-// Descriptions pédagogiques et cas d'usage ML
 const ALGO_TEXTS = {
-  bubble: `• C'est quoi ? Un algorithme qui compare deux éléments voisins et les inverse s'ils sont dans le mauvais ordre. Les plus grandes valeurs "remontent" petit à petit vers la droite, comme des bulles d'air dans l'eau.
-• Le but : Obtenir une liste ordonnée du plus petit au plus grand.
-• Utilité en Machine Learning : Le tri est indispensable pour ordonner des résultats prédictifs. On l'utilise par exemple dans l'algorithme des "k plus proches voisins" (k-NN) pour trier les distances entre données, ou pour classer les scores de confiance d'un modèle pour ne garder que les N meilleures prédictions.`,
-  selection: `• C'est quoi ? Un algorithme qui parcourt toute la liste pour dénicher la plus petite valeur, puis la place tout au début. Il recommence ensuite avec le reste des éléments.
-• Le but : Trier une liste en effectuant le moins d'échanges de données possible en mémoire.
-• Utilité en Machine Learning : Ce principe de sélection du "meilleur élément" sert dans la sélection de variables (Feature Selection). On cherche à identifier la variable qui apporte le plus d'informations au modèle, puis la deuxième, et ainsi de suite pour simplifier les données d'entraînement.`
+  bubble: `• Principe : Il compare deux éléments voisins et les inverse s'ils sont dans le mauvais ordre. Les plus grandes valeurs remontent petit à petit vers la droite.
+• Dans quel but ? Obtenir une liste ordonnée du plus petit au plus grand.
+• Utilité en Machine Learning : Le tri est fondamental pour ordonner des prédictions. On l'utilise dans l'algorithme des k plus proches voisins (k-NN) pour classer les distances entre données, ou pour filtrer le top N des meilleures recommandations.`,
+  selection: `• Principe : Il parcourt la liste pour trouver la plus petite valeur, puis l'échange avec la première position non triée.
+• Dans quel but ? Trier une liste en minimisant le nombre d'échanges en mémoire.
+• Utilité en Machine Learning : Ce principe de recherche du « meilleur élément » est similaire à la sélection de variables (Feature Selection). On sélectionne la variable la plus explicative d'un modèle, puis la deuxième, et ainsi de suite.`
 };
 
-// Mettre à jour la description de l'algorithme sélectionné
 function updateAlgoDescription() {
   algoDescription.textContent = ALGO_TEXTS[selectAlgo.value];
 }
 
-// Pause synchrone basée sur le curseur de vitesse
 const sleep = () => {
   const delay = 510 - parseInt(speedInput.value, 10);
   return new Promise((resolve) => setTimeout(resolve, delay));
 };
 
-// Générer un nouveau tableau aléatoire
 function generateArray() {
   if (isSorting) return;
   array = [];
@@ -51,13 +68,11 @@ function generateArray() {
   liveExplanation.textContent = "Nouveau tableau généré. Prêt à démarrer.";
 }
 
-// Réinitialiser les couleurs des barres
 function resetBarColors() {
   const bars = document.querySelectorAll('.bar');
   bars.forEach(bar => bar.className = 'bar');
 }
 
-// Gestion des états de l'interface utilisateur
 function setUIState(sorting) {
   isSorting = sorting;
   btnGenerate.disabled = sorting;
@@ -66,7 +81,6 @@ function setUIState(sorting) {
   btnStop.disabled = !sorting;
 }
 
-// Demande d'arrêt du tri
 function stopSorting() {
   if (isSorting) {
     stopRequested = true;
@@ -74,7 +88,6 @@ function stopSorting() {
   }
 }
 
-// 1. Tri à bulles (Bubble Sort)
 async function bubbleSort() {
   const bars = document.querySelectorAll('.bar');
   const n = array.length;
@@ -117,7 +130,6 @@ async function bubbleSort() {
   return true;
 }
 
-// 2. Tri par sélection (Selection Sort)
 async function selectionSort() {
   const bars = document.querySelectorAll('.bar');
   const n = array.length;
@@ -165,7 +177,6 @@ async function selectionSort() {
   return true;
 }
 
-// Lancement global
 async function startSorting() {
   setUIState(true);
   stopRequested = false;
@@ -190,12 +201,75 @@ async function startSorting() {
   setUIState(false);
 }
 
-// Écouteurs d'événements
 btnGenerate.addEventListener('click', generateArray);
 btnStart.addEventListener('click', startSorting);
 btnStop.addEventListener('click', stopSorting);
 selectAlgo.addEventListener('change', updateAlgoDescription);
 
-// Initialisation au chargement
 updateAlgoDescription();
 generateArray();
+
+// PARTIE 2 : DEMONSTRATION INTERACTIVE K-NN
+const knnKInput = document.getElementById('knn-k');
+const knnKVal = document.getElementById('knn-k-val');
+const knnList = document.getElementById('knn-list');
+const knnResult = document.getElementById('knn-result');
+
+// Données fictives : distance et classe (Rouge ou Bleu)
+const knnData = [
+  { distance: 1.2, category: 'Classe Bleue' },
+  { distance: 2.5, category: 'Classe Rouge' },
+  { distance: 0.8, category: 'Classe Bleue' },
+  { distance: 3.1, category: 'Classe Rouge' },
+  { distance: 1.9, category: 'Classe Bleue' },
+  { distance: 4.0, category: 'Classe Rouge' },
+  { distance: 2.1, category: 'Classe Rouge' }
+];
+
+function updateKnnDemo() {
+  const k = parseInt(knnKInput.value, 10);
+  knnKVal.textContent = k;
+
+  // Tri automatique des données selon la distance (concept de tri k-NN)
+  const sortedData = [...knnData].sort((a, b) => a.distance - b.distance);
+
+  knnList.innerHTML = '';
+  let blueCount = 0;
+  let redCount = 0;
+
+  sortedData.forEach((item, index) => {
+    const isSelected = index < k;
+    const itemEl = document.createElement('div');
+    itemEl.className = `knn-item ${isSelected ? 'selected' : ''}`;
+    itemEl.textContent = `d = ${item.distance} (${item.category})`;
+    knnList.appendChild(itemEl);
+
+    if (isSelected) {
+      if (item.category === 'Classe Bleue') blueCount++;
+      else redCount++;
+    }
+  });
+
+  const winner = blueCount > redCount ? 'Classe Bleue' : 'Classe Rouge';
+  knnResult.textContent = `Décision k-NN (k = ${k}) : Prédiction = ${winner} (${blueCount} Bleus vs ${redCount} Rouges parmi les k voisins).`;
+}
+
+knnKInput.addEventListener('input', updateKnnDemo);
+updateKnnDemo();
+
+// PARTIE 3 : QUIZ INTERACTIF
+const quizOptions = document.getElementById('quiz-options');
+const quizFeedback = document.getElementById('quiz-feedback');
+
+quizOptions.addEventListener('click', (e) => {
+  if (e.target.classList.contains('quiz-opt')) {
+    const isCorrect = e.target.getAttribute('data-correct') === 'true';
+    if (isCorrect) {
+      quizFeedback.textContent = "Correct ! Le tri permet de réordonner les distances de la plus petite à la plus grande pour sélectionner les k plus petits éléments.";
+      quizFeedback.style.color = "#10b981";
+    } else {
+      quizFeedback.textContent = "Incorrect. Réessayez ! Indice : l'algorithme doit isoler les plus petites distances.";
+      quizFeedback.style.color = "#ef4444";
+    }
+  }
+});
