@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visualiseur d'Algorithmes de Tri</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Visualiseur de Tri</h1>
+    
+    <div class="controls">
+      <button id="btn-generate">Nouveau Tableau</button>
+      
+      <label for="select-algo">Algorithme :</label>
+      <select id="select-algo">
+        <option value="bubble">Tri à bulles (Bubble Sort)</option>
+        <option value="selection">Tri par sélection (Selection Sort)</option>
+      </select>
+
+      <label for="speed">Vitesse :</label>
+      <input type="range" id="speed" min="10" max="500" value="250" />
+
+      <button id="btn-start" class="primary">Lancer le tri</button>
+      <button id="btn-stop" class="danger" disabled>Stopper</button>
+    </div>
+
+    <!-- Zone d'explications dynamiques -->
+    <div class="info-box">
+      <div id="algo-description" class="description"></div>
+      <div id="live-explanation" class="live-status">Cliquez sur « Lancer le tri » pour démarrer.</div>
+    </div>
+
+    <div id="array-container"></div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
